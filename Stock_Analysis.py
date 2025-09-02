@@ -12,6 +12,7 @@ from plotly.subplots import make_subplots
 from nselib import capital_market
 import streamlit as st
 import warnings
+import os
 
 # Suppress FutureWarnings
 warnings.filterwarnings("ignore", category=FutureWarning)
@@ -126,6 +127,9 @@ if fetch_btn and symbol:
     fdate = from_date.strftime("%d-%m-%Y")
     tdate = to_date.strftime("%d-%m-%Y")
 
+    # Toggle for CSV saving
+    save_csv = False   # change to True if you want to save file.csv
+
     df = pd.DataFrame(
         capital_market.price_volume_and_deliverable_position_data(
             symbol=symbol,
@@ -133,6 +137,10 @@ if fetch_btn and symbol:
             to_date=tdate
         )
     )
+
+    # Save to CSV only if save_csv is True
+    if save_csv:
+        df.to_csv("file.csv", index=False, encoding="utf-8")
 
     df = df[df["Series"] == "EQ"].copy()
 
@@ -294,3 +302,14 @@ if fetch_btn and symbol:
     if show_data:
         st.subheader("📊 Raw Data")
         st.dataframe(df)
+
+
+# Toggle switch
+delete_csv = st.sidebar.toggle("Delete file.csv", value=True)
+
+if delete_csv:
+    if os.path.exists("file.csv"):
+        os.remove("file.csv")
+        st.sidebar.success("✅ file.csv removed")
+else:
+    st.sidebar.info("file.csv will be kept")
