@@ -16,6 +16,40 @@ import warnings
 # Suppress FutureWarnings
 warnings.filterwarnings("ignore", category=FutureWarning)
 
+import re
+import pathlib
+
+def update_default_dates(new_from, new_to):
+    """Update the default dates in this .py file."""
+    file_path = pathlib.Path(__file__)  # current file
+    code = file_path.read_text(encoding="utf-8")
+
+    # Current defaults (first match = from_date, second match = to_date)
+    matches = list(re.finditer(r'pd\.to_datetime\("20\d{2}-\d{2}-\d{2}"\)', code))
+
+    if len(matches) >= 2:
+        # Get existing defaults
+        old_from = matches[0].group(0)
+        old_to = matches[1].group(0)
+
+        # Build new expressions
+        new_from_expr = f'pd.to_datetime("{new_from}")'
+        new_to_expr = f'pd.to_datetime("{new_to}")'
+
+        # Replace conditionally
+        if new_from_expr != old_from:
+            code = code[:matches[0].start()] + new_from_expr + code[matches[0].end():]
+
+        if new_to_expr != old_to:
+            # Find again because string length may have changed after first replacement
+            matches = list(re.finditer(r'pd\.to_datetime\("20\d{2}-\d{2}-\d{2}"\)', code))
+            code = code[:matches[1].start()] + new_to_expr + code[matches[1].end():]
+
+    # Save file
+    file_path.write_text(code, encoding="utf-8")
+
+    # st.success(f"✅ Defaults updated → From: {new_from}, To: {new_to}")
+
 # ---------------- Streamlit UI ---------------- #
 st.set_page_config(page_title="Stock Price & Volume Dashboard", layout="wide")
 st.title(f"📈 Stock - Price, Volume & Deliverables")
@@ -45,7 +79,7 @@ date_range_option = st.sidebar.select_slider(
 
 # Default manual date pickers
 from_date = st.sidebar.date_input("From Date", pd.to_datetime("2025-01-01"))
-to_date = st.sidebar.date_input("To Date", pd.to_datetime("2025-09-01"))
+to_date = st.sidebar.date_input("To Date", pd.to_datetime("2025-09-02"))
 
 # Apply quick ranges only if not Manual
 today = pd.to_datetime("today").normalize()
@@ -58,6 +92,10 @@ elif date_range_option == "6M":
 elif date_range_option == "1Y":
     from_date, to_date = today - pd.DateOffset(years=1), today
 # If "Manual" → keep manual date inputs
+
+# 🔥 Automatically update defaults if Manual is chosen
+if date_range_option == "Manual":
+    update_default_dates(from_date.strftime("%Y-%m-%d"), to_date.strftime("%Y-%m-%d"))
 
 # Apply quick ranges
 today = pd.to_datetime("today").normalize()
