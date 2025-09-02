@@ -49,28 +49,6 @@ The dashboard will open in your browser (default: `http://localhost:8501`).
 
 ---
 
-## 📂 Project Structure  
-
-```
-.
-├── Stock_Analysis.py   # Main Streamlit app
-├── README.md           # Documentation
-└── requirements.txt    # Dependencies (optional)
-```
-
-Example `requirements.txt`:  
-
-```
-streamlit
-nselib
-pandas
-plotly
-kaleido
-pandas_market_calendars
-```
-
----
-
 ## ⚡ Notes
 - Data is fetched from **NSE via nselib**. Availability depends on NSE API stability.  
 - Only **EQ (Equity)** series data is used.  
