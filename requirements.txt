@@ -1,0 +1,6 @@
+streamlit
+nselib
+pandas
+plotly
+kaleido
+pandas_market_calendars
