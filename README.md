@@ -21,7 +21,7 @@ The app provides candlestick charts, deliverable vs intraday volumes, number of 
 Clone the repo and install dependencies:  
 
 ```bash
-git clone https://github.com/your-username/Stock-Analysis-Dashboard.git
+git clone https://github.com/Prasad1612/Stock_Analysis.git
 cd Stock-Analysis-Dashboard
 
 pip install -r requirements.txt
