@@ -6,10 +6,10 @@ The app provides candlestick charts, deliverable vs intraday volumes, number of 
 ---
 
 ## 🚀 Features
-- **Stock Symbol Selector** – Choose from NSE-listed stocks or enter manually.  
-- **Quick Date Filters** – `1W`, `1M`, `6M`, `1Y`, or manual date range.  
+- **Stock Symbol Selector** – Drop-down from NSE 500-listed stocks or Enter Manually.  
+- **Quick Date Filters** – `1W`, `1M`, `6M`, `1Y`, or Manual date range.  
 - **Candlestick Chart** – Price movement with % change hover info.  
-- **Deliverable vs Intraday Volumes** – Compare delivery vs intraday trades.  
+- **Deliverable vs Intraday Volumes** – Compare delivery vs intraday Volumes.  
 - **Trades & % Deliverables** – Dual-axis bar & line chart.  
 - **Raw Data Viewer** – Toggle to inspect clean historical data.  
 - **Cache Management** – One-click clear cache button.  
