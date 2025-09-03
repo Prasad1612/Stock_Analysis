@@ -17,6 +17,8 @@ import time
 import re
 import pathlib
 
+RUN_WITH_CODE = False  # 🔀 Switch: True → Run directly, False → Run via streamlit
+
 # Suppress FutureWarnings
 warnings.filterwarnings("ignore", category=FutureWarning)
 
@@ -70,8 +72,8 @@ range_labels = ["Manual", "1W", "1M", "6M", "1Y"]
 date_range_option = st.sidebar.select_slider("Select Day Range", options=range_labels, value="Manual")
 
 # Manual date pickers
-from_date = st.sidebar.date_input("From Date", pd.to_datetime("2025-02-01"))
-to_date = st.sidebar.date_input("To Date", pd.to_datetime("2025-09-03"))
+from_date = st.sidebar.date_input("From Date", pd.to_datetime("2024-12-16"))
+to_date = st.sidebar.date_input("To Date", pd.to_datetime("2025-09-02"))
 
 # Apply quick ranges
 today = pd.to_datetime("today").normalize()
@@ -92,9 +94,7 @@ show_data = st.sidebar.toggle("Show Raw Data", value=False)
 
 # ---------------- Delete CSV ---------------- #
 delete_csv = st.sidebar.toggle("Delete file.csv", value=True)
-if delete_csv and os.path.exists("file.csv"):
-    os.remove("file.csv")
-    # st.warning("⚠️ file.csv deleted from disk.")
+
 
 # Buttons
 col1, col2 = st.sidebar.columns(2)
@@ -239,3 +239,24 @@ if fetch_btn and symbol:
     if show_data:
         st.subheader("📊 Raw Data")
         st.dataframe(df)
+
+if delete_csv and os.path.exists("file.csv"):
+    os.remove("file.csv")
+    # st.warning("⚠️ file.csv deleted from disk.")
+
+if __name__ == "__main__":
+    import sys, os, subprocess
+
+    # RUN_WITH_CODE = False  # 🔀 Switch: True → Run directly, False → Run via streamlit
+
+    if RUN_WITH_CODE :
+        # Prevent infinite loop if already inside Streamlit
+        if os.environ.get("STREAMLIT_RUNNING") != "true":
+            os.environ["STREAMLIT_RUNNING"] = "true"
+            script_path = os.path.abspath(__file__)
+            subprocess.run([sys.executable, "-m", "streamlit", "run", script_path])
+            sys.exit(0)  # ✅ Exit original process
+    else:
+        print("\n")
+        print("⚡ Open Terminal & Run: streamlit run Stock_Analysis.py")
+        print("\n")
