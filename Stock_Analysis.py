@@ -71,7 +71,7 @@ date_range_option = st.sidebar.select_slider("Select Day Range", options=range_l
 
 # Manual date pickers
 from_date = st.sidebar.date_input("From Date", pd.to_datetime("2025-02-01"))
-to_date = st.sidebar.date_input("To Date", pd.to_datetime("2025-09-02"))
+to_date = st.sidebar.date_input("To Date", pd.to_datetime("2025-09-03"))
 
 # Apply quick ranges
 today = pd.to_datetime("today").normalize()
@@ -88,7 +88,13 @@ elif date_range_option == "1Y":
 if date_range_option == "Manual":
     update_default_dates(from_date.strftime("%Y-%m-%d"), to_date.strftime("%Y-%m-%d"))
 
-show_data = st.sidebar.checkbox("Show Raw Data", value=False)
+show_data = st.sidebar.toggle("Show Raw Data", value=False)
+
+# ---------------- Delete CSV ---------------- #
+delete_csv = st.sidebar.toggle("Delete file.csv", value=True)
+if delete_csv and os.path.exists("file.csv"):
+    os.remove("file.csv")
+    # st.warning("⚠️ file.csv deleted from disk.")
 
 # Buttons
 col1, col2 = st.sidebar.columns(2)
@@ -98,12 +104,6 @@ with col2: fetch_btn = st.button("Fetch Chart")
 if clear_btn:
     st.cache_data.clear()
     st.success("✅ Cache cleared! Please fetch again.")
-
-# ---------------- Delete CSV ---------------- #
-delete_csv = st.sidebar.toggle("Delete file.csv", value=True)
-if delete_csv and os.path.exists("file.csv"):
-    os.remove("file.csv")
-    # st.warning("⚠️ file.csv deleted from disk.")
 
 # Status message placeholder in sidebar
 status_placeholder_api = st.sidebar.empty()
